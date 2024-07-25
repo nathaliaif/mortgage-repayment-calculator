@@ -105,6 +105,7 @@ input::-webkit-inner-spin-button {
   color: var(--azul);
   cursor: pointer;
   transition: background-color 0.3s;
+  transition: 0.3s;
 
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -145,6 +146,11 @@ input::-webkit-inner-spin-button {
 
 .mortgage__type input:checked ~ .checkmark:after {
   display: block;
+}
+
+.mortgage__type:has(input[type="radio"]:checked) {
+  background-color: rgb(from var(--primary) r g b / 20%);
+  border: 1px solid var(--primary);
 }
 
 .calculate-button {
@@ -257,6 +263,10 @@ input::-webkit-inner-spin-button {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     background-color: #fff;
+  }
+
+  .mortgage__type:hover {
+    border: 1px solid var(--primary);
   }
 }
 
