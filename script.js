@@ -63,7 +63,7 @@ clearBtn.addEventListener('click', () => {
     emptyResultsContainer.setAttribute('style', 'display: block');
 })
 
-//Preventing input number from accepting specific chars
+// Preventing input number from accepting specific chars
 var invalidChars = [
     "-",
     "+",
@@ -125,8 +125,8 @@ calculateBtn.addEventListener('click', () => {
         clearErrorMessageAll();
 
         function changeResultsTexts(main, secondary){
-            monthlyRepaymentText.innerText = `$${parseFloat(main).toFixed(2)}`;
-            totalRepaymentText.innerText = `$${parseFloat(secondary).toFixed(2)}`;
+            monthlyRepaymentText.innerText = `$${main.toLocaleString('en', {maximumFractionDigits: 2})}`;
+            totalRepaymentText.innerText = `$${secondary.toLocaleString('en', {maximumFractionDigits: 2})}`;
         }
     
         switch(mortgageType){
@@ -148,7 +148,7 @@ calculateBtn.addEventListener('click', () => {
             completedResultsContainer.setAttribute('style', 'display: block');
         },500)
     } else { 
-        //If input never had focus and was empty
+        // If input never had focus and was empty
         emptyInput.forEach(item => {
             if (item.value === '') {
                 showErrorMessage(item, item.value);
