@@ -6,6 +6,7 @@
   --azul-claro: #e2f5fc;
   --cinza: #475963;
   --cinza-claro: #a0bdcf;
+  --error: #d83129;
 }
 
 body,
@@ -61,6 +62,8 @@ html {
   border: 0.7px solid var(--cinza);
   border-radius: 5px;
   overflow: hidden;
+  transition: 0.3s;
+  background-color: var(--azul-claro);
 }
 
 .input-label input[type="number"] {
@@ -70,8 +73,25 @@ html {
   width: 100%;
   color: var(--azul);
   border: none;
-  background: none;
+  background-color: #fff;
   flex-grow: 1;
+}
+
+.input-label input[type="number"]:focus {
+  outline: none;
+}
+
+.input-label:has(input[type="number"]:focus) {
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.input-label:has(input[type="number"]:hover) {
+  border: 1px solid var(--primary);
+}
+
+.input-label:has(.input__icon:hover) {
+  border: 1px solid var(--primary);
 }
 
 input::-webkit-outer-spin-button,
@@ -88,7 +108,15 @@ input::-webkit-inner-spin-button {
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--cinza);
-  background-color: var(--azul-claro);
+  background-color: none;
+  transition: 0.3s;
+}
+
+.required-message {
+  position: absolute;
+  color: var(--error);
+  margin-top: 0.4rem;
+  font-size: 0.7rem;
 }
 
 .mortgage__type {
@@ -235,6 +263,28 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+/* ---- Loader ---- */
+.loader {
+  display: none;
+  border: 7px solid rgb(from var(--primary) r g b / 20%);
+  border-top: 7px solid var(--primary);
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  margin: 0 auto;
+  animation: spin 0.7s ease-out infinite;
+  transition: 0.3s;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* ---- Footer ---- */
 .attribution {
   padding: 0.8rem 0.5rem;
@@ -302,7 +352,7 @@ input::-webkit-inner-spin-button {
   }
 
   .container__form {
-    row-gap: 0.5rem;
+    row-gap: 1rem;
   }
 
   .input__icon {
@@ -342,6 +392,10 @@ input::-webkit-inner-spin-button {
 
   .calculate-button img {
     height: 1.5rem;
+  }
+
+  .empty-results img {
+    width: 12rem;
   }
 
   .results-container {
