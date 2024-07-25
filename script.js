@@ -17,12 +17,12 @@ const totalRepaymentText = document.querySelector('.results__total-repayment');
 const errorMessageAll = document.querySelectorAll('.required-message');
 const inputBackgroundAll = document.querySelectorAll('.input-label');
 const inputIconAll = document.querySelectorAll('.input__icon');
-const inputAll = document.querySelectorAll('input[type="number"');
+const inputNumberAll = document.querySelectorAll('input[type="number"');
 
 const loader = document.querySelector('.loader');
 
-// ---- Remove error messages ----
-function clearErrorMessage(){
+// Remove all error messages
+function clearErrorMessageAll(){
     errorMessageAll.forEach(item => {
         item.innerText = '';
     })
@@ -37,9 +37,25 @@ function clearErrorMessage(){
     })
 }
 
-// ---- Clear button clicked ----
+function showErrorMessage(item, value) {
+    const errorMessage = document.querySelector(`.message__${item.id}`);
+    const inputBackground = document.querySelector(`.input-${item.id}`);
+    const inputIcon = document.querySelector(`.icon-${item.id}`);
+    emptyResultsContainer.setAttribute('style', 'display: block');
+    completedResultsContainer.setAttribute('style', 'display: none');
+
+    console.log(containsAlphabets(value));
+    value <= 0 && value != '' ?  
+        errorMessage.innerText = `Value must be greater than 0`
+        : errorMessage.innerText = 'This field is required';
+
+    inputBackground.setAttribute('style', 'background-color: var(--error); border: 1px solid var(--error)');
+    inputIcon.setAttribute('style', 'color: #fff;');
+}
+
+// Clear button clicked
 clearBtn.addEventListener('click', () => {
-    clearErrorMessage();
+    clearErrorMessageAll();
     inputMortgageAmount = '';
     inputMortgageTerm = '';
     inputInterestRate = '';
@@ -48,36 +64,45 @@ clearBtn.addEventListener('click', () => {
     emptyResultsContainer.setAttribute('style', 'display: block');
 })
 
-// ---- Error message on blur ----
-inputAll.forEach(item => {
+//Preventing input number from accepting specific chars
+var invalidChars = [
+    "-",
+    "+",
+    "e",
+  ];
+  
+inputNumberAll.forEach(item => {
+    item.addEventListener("keydown", function(e) {
+        if (invalidChars.includes(e.key)) {
+          e.preventDefault();
+        }
+      });
+})
+
+// Error message on blur
+inputNumberAll.forEach(item => {
     item.addEventListener('blur', (event) => {
         const value = event.target.value;
 
-    if (value <= 0){
+    if (value <= 0 || value == ''){
+        showErrorMessage(item, value);
+    } else {
         const errorMessage = document.querySelector(`.message__${item.id}`);
         const inputBackground = document.querySelector(`.input-${item.id}`);
         const inputIcon = document.querySelector(`.icon-${item.id}`);
-        emptyResultsContainer.setAttribute('style', 'display: block');
-        completedResultsContainer.setAttribute('style', 'display: none');
 
-        value <= 0 && value != '' ?  
-            errorMessage.innerText = `Value must be greater than 0`
-            : errorMessage.innerText = 'This field is required';
-
-        inputBackground.setAttribute('style', 'background-color: var(--error); border: 1px solid var(--error)');
-        inputIcon.setAttribute('style', 'color: #fff;');
-    } else {
-        clearErrorMessage();
+        errorMessage.innerText = '';
+        inputBackground.style.backgroundColor = '';
+        inputBackground.style.border = '';
+        inputIcon.style.color = '';
     }
-            
     })
 })
 
 calculateBtn.addEventListener('click', () => {
     completedResultsContainer.setAttribute('style', 'display: none');
-    // clearErrorMessage();
 
-    // ---- Calculating mortgage totals start ----
+    // Calculating all mortgage totals
     const inputMortgageType = document.querySelector('input[name="type"]:checked');
     const mortgageType = inputMortgageType.value;
 
@@ -91,16 +116,14 @@ calculateBtn.addEventListener('click', () => {
     const totalPay = (monthlyPayment * term * n);
     const monthlyInterestPayment = monthlyPayment - interest;
     const totalInterestPayment = monthlyInterestPayment * term * n; 
-    // ---- Calculating mortgage totals end ----
-
-
-    // ---- Checking if all inputs have value ----
+    
+    //Checking if the inputs have valid values
     const inputs = [inputMortgageAmount, inputInterestRate, inputMortgageTerm];
     const emptyInput = inputs.filter(item => item.value <= 0 || item.value == '');
 
-    // If the inputs have valid values:
+    // If the inputs values are valid:
     if (emptyInput.length === 0){
-        clearErrorMessage();
+        clearErrorMessageAll();
 
         function changeResultsTexts(main, secondary){
             monthlyRepaymentText.innerText = `$${parseFloat(main).toFixed(2)}`;
@@ -111,8 +134,8 @@ calculateBtn.addEventListener('click', () => {
             case 'repayment':
                 changeResultsTexts(monthlyPayment, totalPay);
                 break;
-                case 'interest-only':
-                    changeResultsTexts(monthlyInterestPayment, totalInterestPayment);
+            case 'interest-only':
+                changeResultsTexts(monthlyInterestPayment, totalInterestPayment);
                 break;
             default:
                 break;
@@ -125,47 +148,12 @@ calculateBtn.addEventListener('click', () => {
             loader.setAttribute('style', 'display: none');
             completedResultsContainer.setAttribute('style', 'display: block');
         },500)
+    } else { 
+        //If input never had focus and was empty
+        emptyInput.forEach(item => {
+            if (item.value === '') {
+                showErrorMessage(item, item.value);
+            }
+        })
     }
-
-    // if (emptyInput.length != 0){
-    //     emptyInput.forEach(item => {
-    //         const errorMessage = document.querySelector(`.message__${item.id}`);
-    //         const inputBackground = document.querySelector(`.input-${item.id}`);
-    //         const inputIcon = document.querySelector(`.icon-${item.id}`);
-    //         emptyResultsContainer.setAttribute('style', 'display: block');
-            
-    //         item.value <= 0 && item.value != '' ?  
-    //             errorMessage.innerText = `Value must be greater than 0`
-    //             : errorMessage.innerText = 'This field is required';
-
-    //         inputBackground.setAttribute('style', 'background-color: var(--error); border: 1px solid var(--error)');
-    //         inputIcon.setAttribute('style', 'color: #fff;');
-    //     })
-    // } else {
-    //     clearErrorMessage();
-
-    //     function changeResultsTexts(main, secondary){
-    //         monthlyRepaymentText.innerText = `$${parseFloat(main).toFixed(2)}`;
-    //         totalRepaymentText.innerText = `$${parseFloat(secondary).toFixed(2)}`;
-    //     }
-    
-    //     switch(mortgageType){
-    //         case 'repayment':
-    //             changeResultsTexts(monthlyPayment, totalPay);
-    //             break;
-    //             case 'interest-only':
-    //                 changeResultsTexts(monthlyInterestPayment, totalInterestPayment);
-    //             break;
-    //         default:
-    //             break;
-    //         }
-        
-    //     emptyResultsContainer.setAttribute('style', 'display: none');
-    //     loader.setAttribute('style', 'display: block');
-        
-    //     setTimeout(() => {
-    //         loader.setAttribute('style', 'display: none');
-    //         completedResultsContainer.setAttribute('style', 'display: block');
-    //     },500)
-    // }
 });
