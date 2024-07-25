@@ -44,7 +44,6 @@ function showErrorMessage(item, value) {
     emptyResultsContainer.setAttribute('style', 'display: block');
     completedResultsContainer.setAttribute('style', 'display: none');
 
-    console.log(containsAlphabets(value));
     value <= 0 && value != '' ?  
         errorMessage.innerText = `Value must be greater than 0`
         : errorMessage.innerText = 'This field is required';
@@ -53,7 +52,7 @@ function showErrorMessage(item, value) {
     inputIcon.setAttribute('style', 'color: #fff;');
 }
 
-// Clear button clicked
+// Clear inputs when button clicked
 clearBtn.addEventListener('click', () => {
     clearErrorMessageAll();
     inputMortgageAmount = '';
